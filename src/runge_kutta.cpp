@@ -20,7 +20,7 @@ Numeric::solve_RK4_fixed_vortices( double dt, CartesianGridOfSpeed const& t_velo
     // On ne bouge que les points :
 
     auto start_c = std::chrono::system_clock::now();
-    #pragma omp parallel for
+    //#pragma omp parallel for num_threads(8)
     for ( std::size_t iPoint=0; iPoint<t_points.numberOfPoints(); ++iPoint)
     {
         point  p = t_points[iPoint];
