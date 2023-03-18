@@ -3,7 +3,7 @@
 include make_linux.inc
 
 
-ALL= vortexSimulation.exe
+ALL= vortexSimulation_q1_q2.exe vortexSimulation_q3.exe
 
 default:	help
 all: $(ALL)
@@ -11,8 +11,11 @@ all: $(ALL)
 clean:
 	@rm -fr objs/*.o *.exe src/*~ *.png
 
-OBJS= objs/vortex.o objs/screen.o objs/runge_kutta.o objs/cloud_of_points.o objs/cartesian_grid_of_speed.o \
-      objs/vortexSimulation.o
+OBJS12= objs/vortex.o objs/screen.o objs/runge_kutta.o objs/cloud_of_points.o objs/cartesian_grid_of_speed.o \
+      objs/vortexSimulation_q1_q2.o
+
+OBJS3= objs/vortex.o objs/screen.o objs/runge_kutta.o objs/cloud_of_points.o objs/cartesian_grid_of_speed.o \
+      objs/vortexSimulation_q3.o
 
 objs/vortex.o:	src/point.hpp src/vector.hpp src/vortex.hpp src/vortex.cpp
 	$(CXX) $(CXXFLAGS) -Isrc -c -o $@ src/vortex.cpp
@@ -29,18 +32,26 @@ objs/runge_kutta.o:	src/vortex.hpp src/cloud_of_points.hpp src/cartesian_grid_of
 objs/screen.o:	src/vortex.hpp src/cloud_of_points.hpp src/cartesian_grid_of_speed.hpp src/screen.hpp src/screen.cpp
 	$(CXX) $(CXXFLAGS) -Isrc -c -o $@ src/screen.cpp
 
-objs/vortexSimulation.o: src/cartesian_grid_of_speed.hpp src/vortex.hpp src/cloud_of_points.hpp src/runge_kutta.hpp src/screen.hpp src/vortexSimulation.cpp
-#	$(CXX) $(CXXFLAGS) -Isrc -c -o $@ src/vortexSimulation.cpp
-	$(MPICXX) $(CXXFLAGS) -Isrc -c -o $@ src/vortexSimulation.cpp
+objs/vortexSimulation_q1_q2.o: src/cartesian_grid_of_speed.hpp src/vortex.hpp src/cloud_of_points.hpp src/runge_kutta.hpp src/screen.hpp src/vortexSimulation_q1_q2.cpp
+#	$(CXX) $(CXXFLAGS) -Isrc -c -o $@ src/vortexSimulation_q1_q2.cpp
+	$(MPICXX) $(CXXFLAGS) -Isrc -c -o $@ src/vortexSimulation_q1_q2.cpp
 
-vortexSimulation.exe: $(OBJS)
+objs/vortexSimulation_q3.o: src/cartesian_grid_of_speed.hpp src/vortex.hpp src/cloud_of_points.hpp src/runge_kutta.hpp src/screen.hpp src/vortexSimulation_q3.cpp
+#	$(CXX) $(CXXFLAGS) -Isrc -c -o $@ src/vortexSimulation_q3.cpp
+	$(MPICXX) $(CXXFLAGS) -Isrc -c -o $@ src/vortexSimulation_q3.cpp
+
+vortexSimulation_q1_q2.exe: $(OBJS12)
 #	$(CXX) $(CXXFLAGS) -o $@ $(OBJS) $(LIB)
-	$(MPICXX) $(CXXFLAGS) -o $@ $(OBJS) $(LIB)
+	$(MPICXX) $(CXXFLAGS) -o $@ $(OBJS12) $(LIB)
+
+vortexSimulation_q3.exe: $(OBJS3)
+#	$(CXX) $(CXXFLAGS) -o $@ $(OBJS) $(LIB)
+	$(MPICXX) $(CXXFLAGS) -o $@ $(OBJS3) $(LIB)
 
 help:
 	@echo "Available targets : "
 	@echo "    all                           : compile all executables"
-	@echo "    vortexSimulation.exe          : compile simple this executable"
+	@echo "    vortexSimulation_q1.exe          : compile simple this executable"
 	@echo "Add DEBUG=yes to compile in debug"
 	@echo "Configuration :"
 	@echo "    CXX      :    $(CXX)"
